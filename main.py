@@ -1,11 +1,8 @@
-# 1st program
-print(9 ** 0.5 * 5)
+# 3rd program
+first_out = 2 * 2 + 2
+print(first_out)
 
-#2nd program
-print(9.99 > 9.98 and 1000 != 1000.1)
+second_out = 2 * (2 + 2)
+print(second_out)
 
-#3rd program
-print()
-
-
-
+print(first_out == second_out)
