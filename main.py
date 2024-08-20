@@ -6,5 +6,6 @@ def get_matrix(n, m, value):
             matrix[i].append(value)
     return matrix
 
-matrix_=get_matrix(3, 5, 42)
+
+matrix_ = get_matrix(3, 5, 42)
 print(matrix_)
