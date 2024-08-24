@@ -1,17 +1,17 @@
 def sum_all(data):
-    result = 0
+    sum_elem = 0
     if isinstance(data, (int, float)):
-        result += data
+        sum_elem += data
     elif isinstance(data, str):
-        result += len(data)
+        sum_elem += len(data)
     elif isinstance(data, dict):
         for key, value in data.items():
-            result += sum_all(key)
-            result += sum_all(value)
+            sum_elem += sum_all(key)
+            sum_elem += sum_all(value)
     elif isinstance(data, (list, tuple, set)):
         for i in data:
-            result += sum_all(i)
-    return result
+            sum_elem += sum_all(i)
+    return sum_elem
 
 
 data_structure = [
