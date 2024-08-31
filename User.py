@@ -12,5 +12,4 @@ class User:
         return f'{self.nickname}'
 
     def __hash__(self):
-        print(hash(self.password))
         return hash(self.password)
