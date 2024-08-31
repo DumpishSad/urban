@@ -5,11 +5,9 @@ class User:
 
     def __init__(self, nickname, password, age):
         self.nickname = nickname
-        self.password = password
+        self.password = hash(password)
         self.age = age
+        print(self.password)
 
     def __str__(self):
         return f'{self.nickname}'
-
-    def __hash__(self):
-        return hash(self.password)

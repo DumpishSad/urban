@@ -61,3 +61,6 @@ class UrTube:
                     print('Конец видео')
         else:
             print('Войдите в аккаунт, чтобы смотреть видео')
+
+    def __repr__(self):
+        return f"{self.users}"
