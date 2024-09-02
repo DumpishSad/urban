@@ -1,61 +1,43 @@
-class Animal:
-    alive = True
-    fed = False
-    name = None
+class Horse:
+    def __init__(self):
+        self.x_distance = 0
+        self.sound = 'Frrr'
 
-    def __init__(self, name):
-        self.name = name
-
-
-class Plant:
-    edible = False
-    name = None
-
-    def __init__(self, name):
-        self.name = name
+    def run(self, dx):
+        self.x_distance += dx
 
 
-class Mammal(Animal):
+class Eagle:
+    def __init__(self):
+        self.y_distance = 0
+        self.sound = 'I train, eat, sleep, and repeat'
 
-    def eat(self, food):
-        if food.edible:
-            print(f'{self.name} съел {food.name}')
-            self.fed = True
-        else:
-            print(f'{self.name} не стал есть {food.name}')
-            self.alive = False
+    def fly(self, dy):
+        self.y_distance += dy
 
 
-class Predator(Animal):
+class Pegasus(Horse, Eagle):
+    def __init__(self):
+        super().__init__()
+        Eagle.__init__(self)
 
-    def eat(self, food):
-        if food.edible:
-            print(f'{self.name} съел {food.name}')
-            self.fed = True
-        else:
-            print(f'{self.name} не стал есть {food.name}')
-            self.alive = False
+    def move(self, dx, dy):
+        self.run(dx)
+        self.fly(dy)
 
+    def get_pos(self):
+        return self.x_distance, self.y_distance
 
-class Flower(Plant):
-    pass
-
-
-class Fruit(Plant):
-    edible = True
+    def voice(self):
+        print(self.sound)
 
 
-a1 = Predator('Волк с Уолл-Стрит')
-a2 = Mammal('Хатико')
-p1 = Flower('Цветик семицветик')
-p2 = Fruit('Заводной апельсин')
+p1 = Pegasus()
 
-print(a1.name)
-print(p1.name)
+print(p1.get_pos())
+p1.move(10, 15)
+print(p1.get_pos())
+p1.move(-5, 20)
+print(p1.get_pos())
 
-print(a1.alive)
-print(a2.fed)
-a1.eat(p1)
-a2.eat(p2)
-print(a1.alive)
-print(a2.fed)
+p1.voice()
