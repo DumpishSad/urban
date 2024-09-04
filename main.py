@@ -17,7 +17,6 @@ class Shop:
         file.close()
         return prod_str
 
-
     def add(self, *products):
         cur_prod = self.get_products()
         for new_prod in products:
@@ -28,12 +27,13 @@ class Shop:
             else:
                 print(f'Продукт {new_prod.name} уже есть в магазине')
 
+
 s1 = Shop()
 p1 = Product('Potato', 50.5, 'Vegetables')
 p2 = Product('Spaghetti', 3.4, 'Groceries')
 p3 = Product('Potato', 5.5, 'Vegetables')
 
-print(p2) # __str__
+print(p2)  # __str__
 
 s1.add(p1, p2, p3)
 
