@@ -1,38 +1,47 @@
-# Вариант 49
-# Изобразить каркасный куб со стороной 250 и с центром в точке O (40,30), и описать
+# 1. Изобразить каркасный куб со стороной 250 и с центром в точке O (40,30), и описать
 # вокруг него каркасную сферу.
 # 2. Выполнить сдвиг куба на dх=250, сферы на dz=-150.
 # 3. Изобразить конус и цилиндр, где вершина конуса является центром основания
 # цилиндра.
 # 4. Промасштабировать цилиндр с коэффициентом 1,7
-
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import math
 
-# Координаты вершин куба относительно центра (0, 0)
 vertices = [
-    (125, 125, -125),  # Верхняя передняя правая
-    (-125, 125, -125),  # Верхняя передняя левая
-    (-125, -125, -125),  # Нижняя передняя левая
-    (125, -125, -125),  # Нижняя передняя правая
-    (125, 125, 125),  # Верхняя задняя правая
-    (-125, 125, 125),  # Верхняя задняя левая
-    (-125, -125, 125),  # Нижняя задняя левая
-    (125, -125, 125)  # Нижняя задняя правая
+    (125, 125, -125),
+    (-125, 125, -125),
+    (-125, -125, -125),
+    (125, -125, -125),
+    (125, 125, 125),
+    (-125, 125, 125),
+    (-125, -125, 125),
+    (125, -125, 125)
 ]
 
-# Пары вершин, образующих рёбра куба
 edges = (
-    (0, 1), (1, 2), (2, 3), (3, 0),  # Передняя грань
-    (4, 5), (5, 6), (6, 7), (7, 4),  # Задняя грань
-    (0, 4), (1, 5), (2, 6), (3, 7)  # Соединяющие рёбра
+    (0, 1), (1, 2), (2, 3), (3, 0),
+    (4, 5), (5, 6), (6, 7), (7, 4),
+    (0, 4), (1, 5), (2, 6), (3, 7)
 )
 
+cube_x = 0
+sphere_z = 0
 
-# Функция рисования каркасного куба
+target_cube_x = 250
+target_sphere_z = -150
+
+start_cube_x = 0
+start_sphere_z = 0
+
+move_speed = 2
+moving = False
+
+move_forward = True
+
+
 def draw_cube():
     glBegin(GL_LINES)
     for edge in edges:
@@ -41,61 +50,72 @@ def draw_cube():
     glEnd()
 
 
-# Функция рисования каркасной сферы
 def draw_sphere(radius):
-    sphere = gluNewQuadric()  # Создаем сферу
-    gluQuadricDrawStyle(sphere, GLU_LINE)  # Линейный каркас
-    gluSphere(sphere, radius, 30, 30)  # Рисуем сферу с заданным радиусом
-
-
-# Функция для сдвига куба по оси X на dx = 250
-def move_cube():
-    glTranslatef(250, 0, 0)  # Сдвигаем куб по оси X на 250
-
-
-# Функция для сдвига сферы по оси Z на dz = -150
-def move_sphere():
-    glTranslatef(0, 0, -150)  # Сдвигаем сферу по оси Z на -150
+    sphere = gluNewQuadric()
+    gluQuadricDrawStyle(sphere, GLU_LINE)
+    gluSphere(sphere, radius, 30, 30)
 
 
 def main():
+    global cube_x, sphere_z, moving, move_forward
+
     pygame.init()
     display = (800, 600)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
 
-    # Устанавливаем перспективу
     gluPerspective(90, (display[0] / display[1]), 0.1, 1000.0)
+    glTranslatef(40, 30, -500)
 
-    # Изначальная позиция куба (центр в O(40, 30))
-    # Выполняем изначальное смещение куба в точку O(40, 30)
-    glTranslatef(40, 30, -500) # x, y, z
-
-
-    # Основной цикл программы
-    while True:
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    moving = True
+                    move_forward = not move_forward
+
+        if moving:
+            if move_forward:
+                if cube_x < target_cube_x:
+                    cube_x += move_speed
+                    if cube_x > target_cube_x:
+                        cube_x = target_cube_x
+
+                if sphere_z > target_sphere_z:
+                    sphere_z -= move_speed
+                    if sphere_z < target_sphere_z:
+                        sphere_z = target_sphere_z
+            else:
+                if cube_x > start_cube_x:
+                    cube_x -= move_speed
+                    if cube_x < start_cube_x:
+                        cube_x = start_cube_x
+
+                if sphere_z < start_sphere_z:
+                    sphere_z += move_speed
+                    if sphere_z > start_sphere_z:
+                        sphere_z = start_sphere_z
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         glPushMatrix()
-
-        # Рисуем куб в текущем положении (центр в O(40, 30))
-        # move_cube()
+        glTranslatef(cube_x, 0, 0)
         glColor3f(1, 1, 1)
         draw_cube()
-
-        # Описываем вокруг куба каркасную сферу с радиусом 216.5
-        # move_sphere()
-        glColor3f(0, 0, 1)
-        draw_sphere((math.sqrt(3) * 250 / 2))
         glPopMatrix()
 
+        glPushMatrix()
+        glTranslatef(0, 0, sphere_z)
+        glColor3f(0, 0, 1)
+        draw_sphere(math.sqrt(3) * 250 / 2)
+        glPopMatrix()
 
         pygame.display.flip()
         pygame.time.wait(10)
+
+    pygame.quit()
 
 
 if __name__ == "__main__":
