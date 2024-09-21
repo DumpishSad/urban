@@ -4,7 +4,7 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram import F
 
-API_TOKEN = 'bugaga'
+
 bot = Bot(token=API_TOKEN)
 
 dp = Dispatcher()
@@ -12,13 +12,11 @@ dp = Dispatcher()
 
 @dp.message(Command(commands=['start']))
 async def start(message: Message):
-    print('Привет! Я бот, помогающий твоему здоровью.')
     await message.answer("Привет! Я бот, помогающий твоему здоровью.")
 
 
 @dp.message(F.text)
 async def all_messages(message: Message):
-    print('Введите команду /start, чтобы начать общение.')
     await message.answer("Введите команду /start, чтобы начать общение.")
 
 
