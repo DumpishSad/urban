@@ -4,7 +4,7 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram import F
 
-API_TOKEN = '7037185148:AAHBMpnPlA9psSGAnNJ3W0uwNSuX4-pCoSM'
+API_TOKEN = 'bugaga'
 bot = Bot(token=API_TOKEN)
 
 dp = Dispatcher()
