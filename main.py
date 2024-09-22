@@ -28,10 +28,20 @@ cursor = connection.cursor()
 #     cursor.execute(f'DELETE FROM Users WHERE id = ?', (i,))
 
 #5
-cursor.execute('SELECT username, email, age, balance FROM Users WHERE age != 60')
-users = cursor.fetchall()
-for user in users:
-    print(user)
+# cursor.execute('SELECT username, email, age, balance FROM Users WHERE age != 60')
+# users = cursor.fetchall()
+# for user in users:
+#     print(user)
+
+#1
+cursor.execute(f'DELETE FROM Users WHERE id = ?', (6,))
+
+#2
+cursor.execute('SELECT COUNT(*) FROM Users')
+num = cursor.fetchone()[0]
+cursor.execute('SELECT SUM(balance) FROM Users')
+sum_ = cursor.fetchone()[0]
+print(sum_ / num)
 
 connection.commit()
 connection.close()
