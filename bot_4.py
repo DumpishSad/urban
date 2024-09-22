@@ -116,7 +116,6 @@ async def handle_text(message: Message):
 async def main():
     await dp.start_polling(bot)
 
-
 if __name__ == '__main__':
     import asyncio
 
