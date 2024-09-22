@@ -16,7 +16,8 @@ button_formulas = InlineKeyboardButton(text='Формулы расчёта', cal
 inline_kb = InlineKeyboardMarkup(inline_keyboard=[[button_calories, button_formulas]], resize_keyboard=True)
 
 button_info = KeyboardButton(text='Информация')
-kb = ReplyKeyboardMarkup(keyboard=[[button_info]], resize_keyboard=True)
+button_calculate = KeyboardButton(text='Рассчитать')
+kb = ReplyKeyboardMarkup(keyboard=[[button_info, button_calculate]], resize_keyboard=True)
 
 
 class UserState(StatesGroup):
