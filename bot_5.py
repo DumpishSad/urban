@@ -8,7 +8,7 @@ from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKe
 from aiogram import F
 from crud_functions import *
 
-API_TOKEN = '7037185148:AAHBMpnPlA9psSGAnNJ3W0uwNSuX4-pCoSM'
+API_TOKEN = '7037185148:-pCoSM'
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
@@ -19,7 +19,9 @@ inline_kb = InlineKeyboardMarkup(inline_keyboard=[[button_calories, button_formu
 button_info = KeyboardButton(text='Информация')
 button_calculate = KeyboardButton(text='Рассчитать')
 button_bay = KeyboardButton(text='Купить')
-kb = ReplyKeyboardMarkup(keyboard=[[button_info, button_calculate], [button_bay]], resize_keyboard=True)
+button_register = KeyboardButton(text='Регистрация')
+kb = ReplyKeyboardMarkup(keyboard=[[button_info, button_calculate], [button_bay, button_register]],
+                         resize_keyboard=True)
 
 inline_buy_kb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Product1', callback_data='product_buying'),
@@ -33,6 +35,12 @@ class UserState(StatesGroup):
     age = State()
     growth = State()
     weight = State()
+
+
+class RegistrationState(StatesGroup):
+    username = State()
+    email = State()
+    age = State()
 
 
 @dp.message(Command(commands=['start']))
@@ -113,6 +121,48 @@ async def send_confirm_message(call: CallbackQuery):
     await call.answer()
 
 
+@dp.message(F.text == "Регистрация")
+async def sing_up(message: Message, state: FSMContext):
+    await message.answer("Введите имя пользователя (только латинский алфавит):")
+    await state.set_state(RegistrationState.username)
+
+
+@dp.message(RegistrationState.username)
+async def set_username(message: Message, state: FSMContext):
+    username = message.text
+
+    if is_included(username):
+        await message.answer("Пользователь существует, введите другое имя:")
+        return
+    else:
+        await state.update_data(username=username)
+        await message.answer("Введите свой email:")
+        await state.set_state(RegistrationState.email)
+
+
+@dp.message(RegistrationState.email)
+async def set_email(message: Message, state: FSMContext):
+    email = message.text
+    await state.update_data(email=email)
+    await message.answer("Введите свой возраст:")
+    await state.set_state(RegistrationState.age)
+
+
+@dp.message(RegistrationState.age)
+async def set_age(message: Message, state: FSMContext):
+    await state.update_data(age=message.text)
+
+    data = await state.get_data()
+    username = data['username']
+    email = data['email']
+    age = data['age']
+
+    add_user(username, email, int(age))
+
+    await message.answer(f"Регистрация завершена! Пользователь {username} успешно добавлен.")
+    await state.clear()
+
+
 @dp.message(F.text)
 async def handle_text(message: Message):
     await message.answer("Введите команду /start, чтобы начать общение.")
@@ -120,6 +170,7 @@ async def handle_text(message: Message):
 
 async def main():
     await dp.start_polling(bot)
+
 
 if __name__ == '__main__':
     import asyncio
