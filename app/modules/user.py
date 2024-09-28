@@ -5,12 +5,12 @@ from app.backend.db import Base
 
 class User(Base):
     __tablename__ = 'users'
-
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, nullable=False)
     firstname = Column(String, nullable=True)
     lastname = Column(String, nullable=True)
     age = Column(Integer, nullable=True)
     slug = Column(String, unique=True, index=True)
-
+    from app.modules.task import Task
     tasks = relationship("Task", back_populates="user")
