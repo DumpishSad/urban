@@ -21,6 +21,7 @@ async def all_users(db: Annotated[Session, Depends(get_db)]):
     return result
 
 
+@router.get("/user_id")
 async def user_by_id(user_id: int, db: Annotated[Session, Depends(get_db)]):
     query = select(User).where(User.id == user_id)
     user = db.execute(query).scalars().first()
@@ -53,7 +54,7 @@ async def update_user(user_id: int, user: UpdateUser, db: Annotated[Session, Dep
             firstname=user.firstname,
             lastname=user.lastname,
             age=user.age,
-            slug=slugify(existing_user.username)
+            slug=slugify(user.firstname)
         )
     )
     db.commit()
