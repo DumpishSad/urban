@@ -53,10 +53,6 @@ async def create_task(task: CreateTask, user_id: int, db: Annotated[Session, Dep
     return {'status_code': status.HTTP_201_CREATED, 'transaction': 'Successful'}
 
 
-# class UpdateTask(BaseModel):
-#     title: str
-#     content: str
-#     priority: int
 @router.put("/update/{task_id}", status_code=status.HTTP_200_OK)
 async def update_task(task_id: int, task: UpdateTask, db: Annotated[Session, Depends(get_db)]):
     query = select(Task).where(Task.id == task_id)
